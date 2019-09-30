@@ -21,7 +21,6 @@ class RetrySpec extends Spec {
     }
   }
 
-  implicit val timeout: Timeout = Timeout(10 seconds)
   val imperfectActor: ActorRef = system.actorOf(Props(new ImperfectActor()), "ImperfectActor2")
 
 }

@@ -68,6 +68,12 @@ To do so, we are going to use scala.concurrent.Promise, we are going to send "a 
 
 This solves the problem.
 
-[RetryActor implementation](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/introduction/ImperfectActor.scala)
+Or does it? _Aha!_
+There is still the chance of failure on the caller, just like with Chapter 2.
 
-[RetryActor Specs](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/test/scala/introduction/IntroductionSpec.scala)
+If the system fails and the caller was awaiting the promise, you can say goodbye to the callback and when the actor
+eventually restarts it wont have a callback to call on success.
+
+No. The solution is not writing Scala, is learning Akka. Let's continue.
+
+# chapter_4 Akka Persistence to the rescue

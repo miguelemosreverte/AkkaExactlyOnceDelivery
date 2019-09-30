@@ -27,7 +27,6 @@ class ImperfectActorSpec extends Spec {
       case a => Future(a.getClass.getSimpleName)
     }
 
-  implicit val timeout: Timeout = Timeout(10 seconds)
   val imperfectActor: ActorRef = system.actorOf(Props(new ImperfectActor()), "ImperfectActor")
 
 }
