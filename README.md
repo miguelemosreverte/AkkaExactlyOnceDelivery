@@ -30,8 +30,14 @@ I present you, a recursive method that retries in case of failure. I call it, Na
 Cons of NaiveAtLeastOnceDelivery:
   - It blocks the thread until ask finishes or fails by timeout
   - In case of crash there is no recovery: If there is a crash during retry the retry will be lost to the crash
-##  NaiveAtLeastOnceDelivery
-[NaiveAtLeastOnceDelivery implementation](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/introduction/ImperfectActor.scala)
 
-[NaiveAtLeastOnceDelivery Specs](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/test/scala/introduction/IntroductionSpec.scala)
+# Chapter 3 Naive Actor
+I present you, a recursive actor that retries in case of failure. I call it, AtLeastOnceDeliveryNaiveActor.
+
+Cons of AtLeastOnceDeliveryNaiveActor:
+  - In case of crash there is no recovery: If there is a crash during retry the retry will be lost to the crash
+
+[AtLeastOnceDeliveryNaiveActor implementation](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/introduction/ImperfectActor.scala)
+
+[AtLeastOnceDeliveryNaiveActor Specs](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/test/scala/introduction/IntroductionSpec.scala)
 
