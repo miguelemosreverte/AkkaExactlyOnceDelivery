@@ -8,8 +8,8 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect.ClassTag
 
 
-object NaiveAtLeastOnceDelivery {
-  def AtLeastOnceDelivery[Input, Output: ClassTag](send: Input, to: ActorRef)
+object Retry {
+  def Retry[Input, Output: ClassTag](send: Input, to: ActorRef)
                                                   (implicit
                                                    timeout: Timeout,
                                                    ec: ExecutionContext,
@@ -19,7 +19,7 @@ object NaiveAtLeastOnceDelivery {
       .mapTo[Output]
       .recoverWith {
         case _: AskTimeoutException => {
-          AtLeastOnceDelivery(send, to)
+          Retry(send, to)
         }
       }
 

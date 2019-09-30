@@ -7,15 +7,15 @@ import utils.Spec
 
 import scala.concurrent.duration._
 
-class NaiveAtLeastOnceDeliverySpec extends Spec {
+class RetrySpec extends Spec {
 
   "ImperfectActor" should {
-    " should reply all the times thanks to retry by AtLeastOnceDelivery" in {
+    " should reply all the times thanks to retry by Retry" in {
 
       type Input  = String
       type Output = String
       for {
-        a <- NaiveAtLeastOnceDelivery.AtLeastOnceDelivery[Input, Output]("Hello there!", imperfectActor)
+        a <- Retry.Retry[Input, Output]("Hello there!", imperfectActor)
 
       } yield assert(a == "Hello there!")
     }

@@ -1,7 +1,8 @@
 # AkkaExactlyOnceDelivery
+## Avoiding AskTimeoutException
 
 **abstract**
-I will show how to send messages in Akka without fear of failure thanks to, AtLeastOnceDelivery, and then show how to achieve ExactlyOnceDelivery thanks to Deduplication.
+I will show how to send messages in Akka without fear of failure thanks to, Retry, and then show how to achieve ExactlyOnceDelivery thanks to Deduplication.
 
 
 **longer abstract**
@@ -25,19 +26,43 @@ I present you, an Actor that fails half the time. I call it, The Imperfect Actor
 [Imperfect Actor Specs](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/test/scala/introduction/IntroductionSpec.scala)
 
 # Chapter_2  Naive Solution
-I present you, a recursive method that retries in case of failure. I call it, NaiveAtLeastOnceDelivery.
+I present you, a recursive method that retries in case of failure. I call it, Retry.
 
-Cons of NaiveAtLeastOnceDelivery:
-  - It blocks the thread until ask finishes or fails by timeout
-  - In case of crash there is no recovery: If there is a crash during retry the retry will be lost to the crash
+# Chapter 2 revisited
+Even though we have created a recursive function that will retry to send a message until completion,
+this function exists in RAM, and if the system crashes, it will be lost, along with the message it
+was supposed to send until it was sent successfully.
+
+So, in order to survive a system crash, we are going to need to save to disk the fact that we are trying
+to send the message, so that it can be continued to be sent once the system restarts.
+We are going to need an Actor, a PersistentActor. Let's start with just an Actor first,
+later we can focus on making it persistent.
 
 # Chapter 3 Naive Actor
-I present you, a recursive actor that retries in case of failure. I call it, AtLeastOnceDeliveryNaiveActor.
+I present you, a recursive actor that retries in case of failure. I call it, RetryActor.
 
-Cons of AtLeastOnceDeliveryNaiveActor:
-  - In case of crash there is no recovery: If there is a crash during retry the retry will be lost to the crash
+[RetryActor implementation](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/introduction/ImperfectActor.scala)
 
-[AtLeastOnceDeliveryNaiveActor implementation](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/introduction/ImperfectActor.scala)
+[RetryActor Specs](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/test/scala/introduction/IntroductionSpec.scala)
 
-[AtLeastOnceDeliveryNaiveActor Specs](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/test/scala/introduction/IntroductionSpec.scala)
+# Chapter 3 revisited
+Even though we have created an actor that will retry to send a message until completion,
+there is a problem with this actor, still:
+## _the initial message problem_
+  - Though it will try until success, what happens if it does not receive _the initial message?_
+    We have just posponed the eventuality of a message failure!
 
+
+We need to go deeper. We need to make this guarantee of message sending a typed result.
+
+We need to play with the actor lifecycle.
+
+What we are going to do is to give a callback to this actor so that when it eventually works, it tell us it did.
+
+To do so, we are going to use scala.concurrent.Promise, we are going to send "a callback" to the Actor constructor.
+
+This solves the problem.
+
+[RetryActor implementation](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/introduction/ImperfectActor.scala)
+
+[RetryActor Specs](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/test/scala/introduction/IntroductionSpec.scala)
