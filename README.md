@@ -23,3 +23,15 @@ I present you, an Actor that fails half the time. I call it, The Imperfect Actor
 [Imperfect Actor implementation](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/introduction/ImperfectActor.scala)
 
 [Imperfect Actor Specs](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/test/scala/introduction/IntroductionSpec.scala)
+
+# Chapter_2  Naive Solution
+I present you, a recursive method that retries in case of failure. I call it, NaiveAtLeastOnceDelivery.
+
+Cons of NaiveAtLeastOnceDelivery:
+  - It blocks the thread until ask finishes or fails by timeout
+  - In case of crash there is no recovery: If there is a crash during retry the retry will be lost to the crash
+##  NaiveAtLeastOnceDelivery
+[NaiveAtLeastOnceDelivery implementation](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/main/scala/introduction/ImperfectActor.scala)
+
+[NaiveAtLeastOnceDelivery Specs](https://github.com/miguelemosreverte/ReactiveExample/blob/master/src/test/scala/introduction/IntroductionSpec.scala)
+
